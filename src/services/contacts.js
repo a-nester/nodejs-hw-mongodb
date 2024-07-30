@@ -6,6 +6,10 @@ export const getAllContacts = async () => {
 };
 
 export const getContactById = async (id) => {
-  const contact = await ContactsCollection.findById(id);
-  return contact;
+  try {
+    const contact = await ContactsCollection.findById(id);
+    return contact;
+  } catch (error) {
+    return null;
+  }
 };
