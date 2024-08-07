@@ -33,12 +33,18 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res, next) => {
-  const contact = await createContact(req.body);
+  const contact = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    contactType: req.body.contactType,
+    ...req.body,
+  };
+  const createdContact = await createContact(contact);
 
   res.status(201).json({
     status: 201,
     message: 'Contact successfully created!',
-    data: contact,
+    data: createdContact,
   });
 };
 
@@ -51,7 +57,7 @@ export const deleteContactController = async (req, res, next) => {
     return;
   }
 
-  res.status(204).send();
+  res.status(204).end();
 };
 
 export const upsertContactControlles = async (req, res, next) => {
