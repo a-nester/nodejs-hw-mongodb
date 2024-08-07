@@ -13,3 +13,8 @@ export const getContactById = async (id) => {
     return null;
   }
 };
+
+export const createContact = async (payload) => {
+  const contact = await ContactsCollection.create(payload);
+  return contact;
+};
