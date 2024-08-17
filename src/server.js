@@ -3,9 +3,9 @@ import express from 'express';
 import { env } from './utils/env.js';
 import pino from 'pino-http';
 import cors from 'cors';
-import studentsRouter from './routers/contacts.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import router from './routers/index.js';
 
 dotenv.config();
 const PORT = Number(env('PORT', 3000));
@@ -23,7 +23,7 @@ export const setupServer = () => {
     }),
   );
 
-  app.use('/contacts', studentsRouter);
+  app.use('/', router);
 
   app.use('*', notFoundHandler);
 
