@@ -6,6 +6,7 @@ import cors from 'cors';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import router from './routers/index.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 const PORT = Number(env('PORT', 3000));
@@ -14,7 +15,7 @@ export const setupServer = () => {
   const app = express();
 
   app.use(cors());
-
+  app.use(cookieParser());
   app.use(
     pino({
       transport: {

@@ -5,8 +5,11 @@ import { createSession } from '../utils/createSession.js';
 
 export const findUserByEmail = (email) => User.findOne({ email });
 
-export const findSessionById = (id, refreshToken) =>
-  Session.findOne({ _id: id, refreshToken });
+export const findSessionById = ({ sessionId, refreshToken }) => {
+  console.log(sessionId);
+
+  return Session.findOne({ _id: sessionId, refreshToken });
+};
 
 export const registerUser = async (userData) => {
   const encryptedPassword = await bcrypt.hash(userData.password, 10);
@@ -18,6 +21,6 @@ export const registerUser = async (userData) => {
 };
 
 export const setupSession = async (userId) => {
-  await Session.deleteOne(userId);
+  await Session.deleteOne({ userId });
   return Session.create({ userId, ...createSession() });
 };
