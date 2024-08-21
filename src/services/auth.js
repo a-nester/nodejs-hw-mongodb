@@ -1,5 +1,5 @@
 import { Session } from '../db/models/Session.js';
-import { User } from '../db/models/user.js';
+import { User } from '../db/models/User.js';
 import bcrypt from 'bcrypt';
 import { createSession } from '../utils/createSession.js';
 
