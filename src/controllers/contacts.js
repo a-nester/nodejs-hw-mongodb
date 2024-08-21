@@ -14,6 +14,7 @@ export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortOrder, sortBy } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
+  const userId = req.user._id;
 
   const contacts = await getAllContacts({
     page,
@@ -21,6 +22,7 @@ export const getAllContactsController = async (req, res) => {
     sortOrder,
     sortBy,
     filter,
+    userId,
   });
 
   res.status(200).json({
@@ -32,8 +34,9 @@ export const getAllContactsController = async (req, res) => {
 
 export const getContactByIdController = async (req, res, next) => {
   const { contactId } = req.params;
+  const userId = req.user._id;
 
-  const contact = await getContactById(contactId);
+  const contact = await getContactById(contactId, userId);
   if (!contact) {
     throw createHttpError(404, 'Contact not found');
   }
@@ -64,19 +67,23 @@ export const createContactController = async (req, res, next) => {
 
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const contact = await deleteContact(contactId);
+  const userId = req.user._id;
+  const contact = await deleteContact(contactId, userId);
 
   if (!contact) {
     next(createHttpError(404, 'Contact not found!'));
     return;
   }
 
-  res.status(204).end();
+  res.status(204).send('Successful deleted');
 };
 
 export const upsertContactControlles = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await upsertContact(contactId, req.body, { upsert: true });
+  const userId = req.user._id;
+  const result = await upsertContact(contactId, userId, req.body, {
+    upsert: true,
+  });
 
   if (!result) {
     next(createHttpError(404, 'Contact not found!'));
@@ -94,7 +101,8 @@ export const upsertContactControlles = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await upsertContact(contactId, req.body);
+  const userId = req.user._id;
+  const result = await upsertContact(contactId, userId, req.body);
 
   if (!result) {
     next(createHttpError(404, 'Contact not found!'));
