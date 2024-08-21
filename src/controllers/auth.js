@@ -85,3 +85,14 @@ export const refreshUserSessionController = async (req, res, next) => {
     },
   });
 };
+
+export const logoutUserController = async (req, res, next) => {
+  if (typeof req.cookies.sessionId === 'string') {
+    await Session.deleteOne({ _id: req.cookies.sessionId });
+  }
+
+  res.clearCookie('sessionId');
+  res.clearCookie('refreshToken');
+
+  res.status(204).end();
+};

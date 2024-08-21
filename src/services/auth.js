@@ -5,11 +5,7 @@ import { createSession } from '../utils/createSession.js';
 
 export const findUserByEmail = (email) => User.findOne({ email });
 
-export const findSessionById = ({ sessionId, refreshToken }) => {
-  console.log(sessionId);
-
-  return Session.findOne({ _id: sessionId, refreshToken });
-};
+export const findUserById = (userId) => User.findById(userId);
 
 export const registerUser = async (userData) => {
   const encryptedPassword = await bcrypt.hash(userData.password, 10);
@@ -18,6 +14,14 @@ export const registerUser = async (userData) => {
     ...userData,
     password: encryptedPassword,
   });
+};
+
+export const findSessionById = ({ sessionId, refreshToken }) => {
+  return Session.findOne({ _id: sessionId, refreshToken });
+};
+
+export const findSessionByToken = async (token) => {
+  return await Session.findOne({ accessToken: token });
 };
 
 export const setupSession = async (userId) => {

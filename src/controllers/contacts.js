@@ -50,6 +50,7 @@ export const createContactController = async (req, res, next) => {
     name: req.body.name,
     phoneNumber: req.body.phoneNumber,
     contactType: req.body.contactType,
+    userId: req.user._id,
     ...req.body,
   };
   const createdContact = await createContact(contact);
