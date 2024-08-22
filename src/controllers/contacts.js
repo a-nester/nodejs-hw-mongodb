@@ -40,6 +40,7 @@ export const getContactByIdController = async (req, res, next) => {
   if (!contact) {
     throw createHttpError(404, 'Contact not found');
   }
+  console.log('!!!', contact);
 
   res.status(200).json({
     status: 200,
