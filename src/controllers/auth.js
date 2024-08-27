@@ -1,14 +1,18 @@
 import createHttpError from 'http-errors';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 import {
   findSessionById,
   registerUser,
+  requestResetToken,
   setupSession,
 } from '../services/auth.js';
 import { findUserByEmail } from '../services/auth.js';
-import bcrypt from 'bcrypt';
 import { setupCookie } from '../utils/setupCookie.js';
 import { Session } from '../db/models/Session.js';
+import { User } from '../db/models/User.js';
+import { env } from '../utils/env.js';
 
 export const registerUserController = async (req, res, next) => {
   const { name, email } = req.body;
@@ -95,4 +99,51 @@ export const logoutUserController = async (req, res, next) => {
   res.clearCookie('refreshToken');
 
   res.status(204).end();
+};
+
+export const requestResetEmailController = async (req, res) => {
+  const user = await findUserByEmail(req.body.email);
+  if (!user) {
+    throw createHttpError(401, 'User not found!');
+  }
+
+  await requestResetToken(user);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Reset password email was successfully sent!',
+    data: {},
+  });
+};
+
+export const resetPasswordController = async (req, res) => {
+  let entries;
+
+  try {
+    entries = jwt.verify(req.body.token, env('JWT_SECRET'));
+  } catch (error) {
+    if (error instanceof Error) throw createHttpError(401, error.message);
+    throw error;
+  }
+
+  const user = User.findOne({
+    email: entries.email,
+    _id: entries.sub,
+  });
+
+  console.log('!!!', user._conditions);
+
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  const encryptedPassword = await bcrypt.hash(req.body.password, 10);
+
+  await User.updateOne({ _id: entries.sub }, { password: encryptedPassword });
+
+  res.status(200).json({
+    status: 200,
+    message: 'Password was successfully reset!',
+    data: {},
+  });
 };
