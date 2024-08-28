@@ -45,7 +45,7 @@ export const requestResetToken = async (user) => {
     },
     env('JWT_SECRET'),
     {
-      expiresIn: '50m',
+      expiresIn: '5m',
     },
   );
 

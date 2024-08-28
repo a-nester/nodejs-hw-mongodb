@@ -126,12 +126,10 @@ export const resetPasswordController = async (req, res) => {
     throw error;
   }
 
-  const user = User.findOne({
+  const user = await User.findOne({
     email: entries.email,
     _id: entries.sub,
   });
-
-  console.log('!!!', user._conditions);
 
   if (!user) {
     throw createHttpError(404, 'User not found');
@@ -139,7 +137,7 @@ export const resetPasswordController = async (req, res) => {
 
   const encryptedPassword = await bcrypt.hash(req.body.password, 10);
 
-  await User.updateOne({ _id: entries.sub }, { password: encryptedPassword });
+  await User.updateOne({ _id: user._id }, { password: encryptedPassword });
 
   res.status(200).json({
     status: 200,
