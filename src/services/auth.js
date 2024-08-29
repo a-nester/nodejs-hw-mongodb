@@ -71,7 +71,3 @@ export const requestResetToken = async (user) => {
     html,
   });
 };
-
-// export const loginOrRegisterWithGoogle = async (code) => {
-//   console.log(payload);
-// };

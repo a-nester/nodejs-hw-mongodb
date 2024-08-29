@@ -161,7 +161,6 @@ export const getOAuthURLController = async (req, res) => {
 export const confirmOAutController = async (req, res) => {
   const { code } = req.body;
 
-  // await loginOrRegisterWithGoogle(code);
   const ticket = await validateCode(code);
 
   const payload = ticket.getPayload();
@@ -183,9 +182,6 @@ export const confirmOAutController = async (req, res) => {
       password,
     });
   }
-
-  // const session = await setupSession(user._id);
-  // setupCookie(res, session);
 
   const session = await setupSession(user._id);
   setupCookie(res, session);
