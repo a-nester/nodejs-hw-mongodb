@@ -2,6 +2,7 @@ import { Router } from 'express';
 import express from 'express';
 import { validateBody } from '../middlewares/validateBody.js';
 import {
+  confirmOAuthSchema,
   loginUserSchema,
   registerUserSchema,
   requestResetEmailSchema,
@@ -15,7 +16,11 @@ import {
   registerUserController,
   requestResetEmailController,
   resetPasswordController,
+  getOAuthURLController,
+  confirmOAutController,
 } from '../controllers/auth.js';
+
+import '../utils/googleOAuth2.js';
 
 export const router = Router();
 const jsonParser = express.json();
@@ -48,6 +53,15 @@ router.post(
   '/reset-password',
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController),
+);
+
+router.get('/get-oauth-url', ctrlWrapper(getOAuthURLController));
+
+router.post(
+  '/confirm-oauth',
+  jsonParser,
+  validateBody(confirmOAuthSchema),
+  ctrlWrapper(confirmOAutController),
 );
 
 export default router;
