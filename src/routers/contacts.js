@@ -31,6 +31,7 @@ router.post(
   '/',
   upload.single('photo'),
   jsonParser,
+  upload.single('photo'),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
