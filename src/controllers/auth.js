@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
+import crypto from 'node:crypto';
 import jwt from 'jsonwebtoken';
 
 import {
@@ -13,6 +14,7 @@ import { setupCookie } from '../utils/setupCookie.js';
 import { Session } from '../db/models/Session.js';
 import { User } from '../db/models/User.js';
 import { env } from '../utils/env.js';
+import { generateAuthUrl, validateCode } from '../utils/googleOAuth2.js';
 
 export const registerUserController = async (req, res, next) => {
   const { name, email } = req.body;
@@ -152,5 +154,50 @@ export const resetPasswordController = async (req, res) => {
     status: 200,
     message: 'Password was successfully reset!',
     data: {},
+  });
+};
+
+export const getOAuthURLController = async (req, res) => {
+  const url = generateAuthUrl();
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully get Google OAuth URL',
+    data: { url },
+  });
+};
+
+export const confirmOAutController = async (req, res) => {
+  const { code } = req.body;
+
+  const ticket = await validateCode(code);
+
+  const payload = ticket.getPayload();
+
+  if (!payload) {
+    throw createHttpError(401, 'Unauthorized');
+  }
+
+  const user = await findUserByEmail(payload.email);
+
+  const password = await bcrypt.hash(
+    crypto.randomBytes(30).toString('base64'),
+    10,
+  );
+  if (user === null) {
+    await User.create({
+      email: payload.email,
+      name: payload.name,
+      password,
+    });
+  }
+
+  const session = await setupSession(user._id);
+  setupCookie(res, session);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully logged in an user!',
+    data: { accessToken: session.accessToken },
   });
 };
