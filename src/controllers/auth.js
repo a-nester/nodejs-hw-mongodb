@@ -106,10 +106,19 @@ export const logoutUserController = async (req, res, next) => {
 export const requestResetEmailController = async (req, res) => {
   const user = await findUserByEmail(req.body.email);
   if (!user) {
-    throw createHttpError(401, 'User not found!');
+    throw createHttpError(404, 'User not found!');
   }
 
-  await requestResetToken(user);
+  try {
+    await requestResetToken(user);
+  } catch (error) {
+    if (error instanceof Error)
+      throw createHttpError(
+        500,
+        'Failed to send the email, please try again later.',
+      );
+    throw error;
+  }
 
   res.status(200).json({
     status: 200,
