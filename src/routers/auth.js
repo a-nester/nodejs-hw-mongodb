@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import express from 'express';
+import { Router } from 'express';
 import { validateBody } from '../middlewares/validateBody.js';
 import {
   confirmOAuthSchema,

@@ -2,7 +2,6 @@ tags:
   - Auth
 summary: Create a new user
 operationId: createUser
-description: 'Create a new user'
 security:
   - bearerAuth: []
 requestBody:
@@ -73,6 +72,6 @@ responses:
               properties:
                 message:
                   type: string
-                  example: 'Error creating contact'
+                  example: 'Error creating user'
   '500':
     $ref: ../../../components/responses/500.yaml

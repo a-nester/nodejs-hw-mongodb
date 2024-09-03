@@ -1,0 +1,26 @@
+tags:
+  - Auth
+summary: Google OAuth2 login user
+operationId: OAuth2LoginUser
+security:
+  - oAuthNoScopes: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - code
+
+        properties:
+          code:
+            description: 'Google OAuth2 access code'
+            type: string
+            example: '4/0AQlEd8x-HoM6PYYe_3mGOLaUgaOZWdqBj_XmyDVUo5Iaab0N_-t-eUsOYa5rQDtf2tOI6Q'
+
+responses:
+  '200':
+    $ref: ../../../components/responses/200.yaml
+  '400':
+    $ref: ../../../components/responses/400.yaml

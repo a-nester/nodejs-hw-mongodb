@@ -1,0 +1,8 @@
+components:
+  securitySchemes:
+    oAuthNoScopes:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://api.example.com/oauth2/authorize
+          scopes: {} # <-----

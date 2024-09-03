@@ -1,0 +1,21 @@
+tags:
+  - Auth
+summary: Logout user
+operationId: logoutUser
+security:
+  - bearerAuth: []
+parameters:
+  - in: header
+    name: Authorization
+    schema:
+      type: string
+    required: true
+responses:
+  '200':
+    description: The user is logged out.
+
+  '401':
+    description: Missing header with authorization token.
+
+  '500':
+    $ref: '../../../components/responses/500.yaml'
