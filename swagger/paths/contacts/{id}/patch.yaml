@@ -44,14 +44,12 @@ requestBody:
             description: "Contact's groupe"
             type: string
             enum: ['work', 'home', 'personal']
-          userId:
-            description: "Contact's parent id"
-            type: string
-            example: 65e4decdd286b30065d54af9
           photo:
             description: "Link to contact's photo"
             type: string
+            format: binary
             example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
+
 responses:
   '200':
     description: Creates a contact

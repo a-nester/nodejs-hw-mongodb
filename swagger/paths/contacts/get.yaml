@@ -45,11 +45,11 @@ parameters:
       type: string
       enum: ['work', 'home', 'personal']
       example: 'work'
-  - in: query
-    name: userId
-    schema:
-      type: string
-      example: '65ca67e7ae7f10c88b598384'
+  # - in: query
+  #   name: userId
+  #   schema:
+  #     type: string
+  #     example: '65ca67e7ae7f10c88b598384'
 responses:
   '200':
     description: 'Successfully found contacts'
