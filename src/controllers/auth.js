@@ -198,6 +198,12 @@ export const confirmOAutController = async (req, res) => {
   res.status(200).json({
     status: 200,
     message: 'Successfully logged in an user!',
-    data: { accessToken: session.accessToken },
+    data: {
+      user: {
+        name: payload.name,
+        email: payload.email,
+      },
+      accessToken: session.accessToken,
+    },
   });
 };
