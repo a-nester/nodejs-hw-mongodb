@@ -60,7 +60,7 @@ router.get('/get-oauth-url', ctrlWrapper(getOAuthURLController));
 router.post(
   '/confirm-oauth',
   jsonParser,
-  validateBody(confirmOAuthSchema),
+  // validateBody(confirmOAuthSchema),
   ctrlWrapper(confirmOAutController),
 );
 
