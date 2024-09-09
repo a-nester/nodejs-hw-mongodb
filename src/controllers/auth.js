@@ -168,8 +168,8 @@ export const getOAuthURLController = async (req, res) => {
 };
 
 export const confirmOAutController = async (req, res) => {
-  const { code } = req.query;
-  console.log('111', code);
+  const { code } = req.body;
+
   const ticket = await validateCode(code);
 
   const payload = ticket.getPayload();
