@@ -22,15 +22,16 @@ export const registerUserController = async (req, res, next) => {
 
   if (user) throw createHttpError(409, 'Email in use!');
 
-  await registerUser(req.body);
+  const newUser = await registerUser(req.body);
+
+  const session = await setupSession(newUser._id);
+
+  setupCookie(res, session);
 
   res.status(201).json({
-    status: 201,
-    message: 'Successfully registered a user!',
-    data: {
-      name,
-      email,
-    },
+    user: { name, email },
+    token: session.refreshToken,
+    sessionId: session.sessionId,
   });
 };
 
@@ -53,9 +54,11 @@ export const loginUserController = async (req, res, next) => {
   setupCookie(res, session);
 
   res.status(200).json({
-    status: 200,
-    message: 'Successfully logged in an user!',
-    data: { accessToken: session.accessToken },
+    user: {
+      name: user.name,
+      email: user.email,
+    },
+    accessToken: session.accessToken,
   });
 };
 
@@ -195,15 +198,18 @@ export const confirmOAutController = async (req, res) => {
   const session = await setupSession(user._id);
   setupCookie(res, session);
 
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully logged in an user!',
-    data: {
-      user: {
-        name: payload.name,
-        email: payload.email,
+  res
+    .status(200)
+    // .setHeader('Set-Cookie: sessionid=38afes7a8; HttpOnly;')
+    .json({
+      status: 200,
+      message: 'Successfully logged in an user!',
+      data: {
+        user: {
+          name: payload.name,
+          email: payload.email,
+        },
+        // accessToken: session.accessToken,
       },
-      accessToken: session.accessToken,
-    },
-  });
+    });
 };
