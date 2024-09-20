@@ -22,16 +22,10 @@ export const registerUserController = async (req, res, next) => {
 
   if (user) throw createHttpError(409, 'Email in use!');
 
-  const newUser = await registerUser(req.body);
-
-  const session = await setupSession(newUser._id);
-
-  setupCookie(res, session);
+  await registerUser(req.body);
 
   res.status(201).json({
     user: { name, email },
-    token: session.refreshToken,
-    sessionId: session.sessionId,
   });
 };
 
